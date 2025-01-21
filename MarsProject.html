@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mach The Card!</title>
+    <style>
+        /*폰트*/
+        body, #Nickname, #Game_Start, #Game_Guide {
+            font-family: 'Kdam Thmor Pro' !important;
+        }
+        /* 좌우 영역 구분 */
+        div {
+            width: 100%;
+            height: 850px;
+            border: 1px solid black;
+        }
+
+        /* 좌측 영역 (랭크 리스트)) */
+        div.left {
+            width: 50%;
+            float: left;
+            box-sizing: border-box;
+            background: #5d5d5d;
+        }
+        /* 우측 영역 (게임 메인 요소)) */
+        div.right {
+            width: 50%;
+            float: right;
+            box-sizing: border-box;
+            background: #747474;
+        }
+        h1 {
+            color: white;
+            font-size: 80px;
+            text-align: center;
+            margin-top: 10%; margin-bottom: 1%;
+        }
+        #Nickname {
+            font-size: 20px;
+            text-align:center;
+            width: 500px;
+            height: 70px;
+            margin-top: 0px; margin-bottom: 10px;
+            margin-left: 25%; margin-right: 25%;
+            border-radius: 15px;
+            border: none;
+            outline:none;
+        }
+        .error {
+            border: red;
+        }
+        #Game_Start {
+            font-size: 32px;
+            color: white;
+            text-align:center;
+            width: 300px;
+            height: 50px;
+            margin-top: 10px; margin-bottom: 10px;
+            margin-left: 35%;
+            border: white;
+            border-radius: 10px;
+            outline: 1px solid white;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        #Game_Start:hover{
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: 0.1s;
+        }
+        #Game_Guide {
+            font-size: 32px;
+            color: white;
+            text-align:center;
+            width: 300px;
+            height: 50px;
+            margin-top: 10px; margin-bottom: 10px;
+            margin-left: 35%;
+            border: white;
+            border-radius: 10px;
+            outline: 1px solid white;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        #Game_Guide:hover{
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: 0.1s;
+        }
+    </style>
+
+    <script>
+        if (Nickname.length >= 10) {
+            NicknameInput.classList.add('error');
+        } else if (existingNicknames.includes(Nickname)) {
+            NicknameInput.classList.add('error');
+        } else {
+            href="GamePlay.html"
+        }
+    </script>
+</head>
+<body>
+    <!--폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+    <!--랭크 리스트 (좌측)-->
+    <div class="left">
+        <h1>Ranking Page</h1>
+    </div>
+
+    <!--랭크 리스트 (좌측)-->
+    <div class="right">    
+        <h1>Matching!<br>The Card</h1>
+        <br><br><br><br>
+            <input type="text" id="Nickname" placeholder="닉네임을 입력하시오. (10자 이내)">
+        <br><br>
+            <button type="button" id="Game_Start" name="Game Start" onclick="location.href='GamePlay.html'">start</button><br>
+            <button type="button" id="Game_Guide" name="Game Guide">method</button>
+    </div>
+
+</body>
+</html>
