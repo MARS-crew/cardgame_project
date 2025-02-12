@@ -108,12 +108,18 @@
             background-color: #EBECEF;
             color:black;
         }
+        
+        .aboutClose {
+            margin-top:45px;
+            margin-left:150px;
+        }
 
         .subTitle {
             width:500px;
             height:30px;
             margin-top:30px;
             margin-left:60px;
+            /* background-color: aliceblue; */
             font-size:1.5em;
         }
 
@@ -131,22 +137,24 @@
             margin:15px;
         }
 
+
     </style>
     <title>MatchTheCard</title>
 </head>
-
+  
 <body>
    
     <input type="text" class="name" placeholder="닉네임을 입력하세요(10자 이내)"></input>
+    
     
     <div class="modal">
         <div class="modal_body">
 
             <div class="description">
-                <h1 style="color:white">게임 설명</h1>
+                <h1 style="color:white">게임 설명ㅇ</h1>
                 <span class="close" id="closeModalBtn">&times;</span>
             </div>
-            
+            <p class="aboutClose">창 밖을 클릭하거나 상단에 'X' 버튼을 클릭하면 닫힙니다.
             <div class="subTitle">게임 방법</div>
             <div class="textBox">
                 <div class="text">
@@ -172,7 +180,7 @@
                 </div>
             </div>
 
-            <div class="subTitle">랭킹</div>
+            <div class="subTitle">랭킹킹</div>
             <div class="textBox">
                 <div class="text">
                     랭킹은 총 30위까지 저장되며 10개씩 확인 할 수 있습니다.
@@ -196,16 +204,16 @@
                 </div>
             </div>
 
-            <div class="subTitle">단계별 시간제한</div>
+            <div class="subTitle">아이템 카드</div>
             <div class="textBox">
                 <div class="text">
-                    1단계 : 20초
-                    <br>2단계 : 30초
-                    <br>3단계 : 40초
-                    <br>4단계 : 50초
-                    <br>5단계 : 60초
+                1단계 : 20초
+                <br>2단계 : 30초
+                <br>3단계 : 40초
+                <br>4단계 : 50초
+                <br>5단계 : 60초
 
-                    <p>10초 남은 경우 빨간 색상으로 알립니다.</p>
+                <p>10초 남은 경우 빨간 색상으로 알립니다.</p>
                 </div>
             </div>
 
@@ -217,8 +225,15 @@
 
 
 
-    <script>
 
+
+
+
+
+
+
+
+    <script>
     
         const modal = document.querySelector('.modal');
         const btnOpenModal=document.querySelector('.btn-open-modal');
@@ -238,8 +253,10 @@
             modal.style.display = 'none';
         }
         });
+       
 
 
+        
     </script>
 </body>
 </html>

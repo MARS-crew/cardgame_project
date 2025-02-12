@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST 요청 테스트</title>
+</head>
+<body>
+    <h1>점수 추가</h1>
+    <form id="postForm">
+        <label for="id">아이디:</label>
+        <input type="text" id="id" name="id" required>
+        <br><br>
+        <label for="score">점수:</label>
+        <input type="number" id="score" name="score" required>
+        <br><br>
+        <button type="submit">저장</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('postForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('id').value;
+            const score = document.getElementById('score').value;
+
+            fetch('first.php', {  // 여기에 PHP 파일의 URL을 넣어주세요.
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'id': id,
+                    'score': score
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('response').textContent = '에러가 발생했습니다: ' + error;
+            });
+        });
+
+        fetch('first.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },  
+            body: new URLSearchParams({
+                'id': 'test_id',
+                'score': 100
+            })  
+        })
+        .then(response => response.text())  // JSON 형식으로 응답을 받기 전에 먼저 text로 받음
+        .then(data => {
+            try {
+                const jsonData = JSON.parse(data);  // 여기서 JSON.parse()를 사용해 JSON 형식으로 변환
+                document.getElementById('response').textContent = JSON.stringify(jsonData, null, 2);
+            } catch (e) {
+                console.error('응답이 JSON 형식이 아닙니다:', e);
+                document.getElementById('response').textContent = '응답을 JSON으로 변환하는 데 실패했습니다.';
+            }   
+        })
+        .catch(error => {
+            document.getElementById('response').textContent = '에러가 발생했습니다: ' + error;
+        });
+
+    </script>
+</body>
+</html>
