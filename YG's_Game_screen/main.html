@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>게임 화면</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="timer/timer.css">
+    <link rel="stylesheet" href="gameManager/GameManager.css">
+</head>
+<body>
+    <div class="container">
+
+        <!-- 상단 컨테이너 -->
+        <div class="top-container">
+            <button class="back-button">◀ 메인 화면</button>
+            <div class="score-board">
+                <span>랭킹 - 점수</span> <span class="score">9999</span>
+            </div>
+            <!-- 원형 프로그레시브 타이머 -->
+            <div class="timer-container">
+                <div id="timer" class="timer">
+                    <div id="timerDisplay">타이머</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게임 영역 -->
+        <div class="game-wrapper">
+            <!-- 카드 컨테이너 -->
+            <div class="flip"></div>
+
+            <!-- 아이템 컨테이너 -->
+            <div class="item-container">
+                <div class="item-text">아이템</div>
+                <div class="items">
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item selected"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="timer/timer.js"></script>
+    <script src="gameManager/GameManager.js"></script>
+</body>
+</html>
