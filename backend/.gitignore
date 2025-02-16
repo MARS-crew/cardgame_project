@@ -1,7 +1,0 @@
-*match.the.game.json;
-*cacert.pen;
-/vendor
-match.the.game.json
-composer.lock
-composer.phar
-cacert.pem
