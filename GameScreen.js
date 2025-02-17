@@ -19,7 +19,8 @@ const newCard = [];
 
 let startPoint = {X: 0, Y: 0};
 
-var timerContainer = document.querySelector(".timer")
+const timerContainer = document.querySelector(".timer")
+const timerDisplay = document.getElementById('timerDisplay');
 
 /**
  * 게임 시작 함수
@@ -148,7 +149,8 @@ function checkRoundClear() {
     let allFlipped = document.querySelectorAll('.card.flipped').length === CARD_PER_ROW * CARD_PER_COLUMN;
     if (allFlipped) {
         if (timerId) clearInterval(timerId); // 기존 타이머 정리
-        setTimeout(nextRound, 1000);
+        setTimeout(nextRound, 3000);
+        showRound();
     }
 }
 
@@ -195,23 +197,50 @@ function flipCard(selectedCard) {
  * 타이머 시작 함수
  */
 function startTimer(sec) {
+    timerDisplay.textContent = sec + "초";
     var num = 360;
+    timerContainer.style.setProperty("--timerA", num + "deg")
 
     timerId = setInterval(() => {
         sec--;
 
-        timerContainer.style.setProperty("--timerA", num + "deg")
-        timerContainer.style.background = ` conic-gradient(#E1E2E7 var(--timerA) ,#E1E2E7 0deg ,#293047 0deg,#293047 360deg)`
+        timerContainer.style.setProperty("--timerA", num + "deg");
+        if (sec < 10) {
+            timerContainer.style.background = ` conic-gradient(crimson var(--timerA) ,crimson 0deg ,#293047 0deg,#293047 360deg)`
+        } else {
+            timerContainer.style.background = ` conic-gradient(#E1E2E7 var(--timerA) ,#E1E2E7 0deg ,#293047 0deg,#293047 360deg)`
+        }
         num = num - (num / sec);
 
-        document.getElementById('timerDisplay').textContent = sec - 1 + "초";
+        timerDisplay.textContent = sec + "초";
 
-        if (sec <= 0) {
+        if (sec < 0) {
             clearInterval(timerId);
             isGameStarted = false;
-            document.getElementById('timerDisplay').textContent = "끝";
+            timerDisplay.textContent = "끝";
         }
     }, 1000);
+}
+
+function showRound() {
+    const roundBox = document.getElementById("roundBox");
+    const text = document.getElementById("roundText");
+
+    if (!roundBox || !text) return;
+
+    roundBox.style.transition = `transform 500ms linear`;
+    roundBox.style.transform = "translate(0, 0)";
+
+    text.innerText = `${currentRound+2}라운드`;
+    text.style.transition = `transform 3000ms linear`;
+    text.style.transform = "translate(100vw, 0)";
+
+    setTimeout(() => {
+        roundBox.style.transform = "translate(0%, -100%)";
+    }, 3000);
+    setTimeout(() => {
+        text.style.transform = "translate(-100vw, 0)";
+    }, 4000);
 }
 
 /**
