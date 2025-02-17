@@ -1,0 +1,41 @@
+@property --timerA {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+.timer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 14vh;
+    height: 14vh;
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+    background: conic-gradient(
+        #E1E2E7 var(--timerA),
+        #E1E2E7 0deg,
+        #293047 0deg,
+        #293047 360deg
+    );
+    animation: Timer_Animation 0.5s ease-in-out;/*실패*/
+    border-radius: 50%;
+}
+
+.timer #timerDisplay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    height: 70%;
+    font-size: 2vh;
+    color: #FFFFFF;
+    background-color: #293047;
+    border-radius: 50%;
+}

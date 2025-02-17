@@ -1,0 +1,89 @@
+@font-face {
+    font-family: 'KCC-Hanbit';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/KCC-Hanbit.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'KCC-Hanbit';
+    background: url(GameScreen_BackGround.jpg);
+    background-size: cover;
+    color: white;
+    text-align: center;
+    margin: 0;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+}
+
+.top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.back-button {
+    align-self: flex-start;
+    background: none;
+    margin-top: 4vh;
+    border: none;
+    color: white;
+    font-size: 2vh;
+    cursor: pointer;
+}
+
+.score-board {
+    font-size: 5vh;
+}
+
+.game-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.item-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 10vh;
+    height: 50vh;
+    margin: 5%;
+    background-color: #323d58;
+    text-align: center;
+    border-radius:10px;
+}
+
+.item-text {
+    background-color: white;
+    color: black;
+    width: 10vh;
+    font-size: 3vh;
+}
+
+.items {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: stretch;
+    width: 80%;
+    height: 80%;
+    margin: 20%;
+}
+
+.item {
+    height: 5vh;
+    background-color: white;
+}
+
+.selected {
+    background-color: yellow;
+}
