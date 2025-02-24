@@ -39,3 +39,13 @@
     background-color: #293047;
     border-radius: 50%;
 }
+
+@media (max-width: 600px) {
+    .timer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 20vw;
+        height: 20vw;
+    }
+}
