@@ -28,10 +28,15 @@
 }
 
 .front {
-    background: #C1C4CD; 
+    background: #36405E; 
 }
 
 .back {
-    background: #36405E; 
+    background: #C1C4CD;
     transform: rotateY(180deg); 
+}
+
+.card img {
+    width: 80%;
+    object-fit: cover;
 }

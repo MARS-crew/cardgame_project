@@ -8,6 +8,7 @@ let sec = 0; // 타이머에 남은 시간
 let roundTime = [20, 30, 40, 50, 60]; // 각 라운드의 시간
 let roundColumn = [3, 6, 6, 6, 6]; // 각 라운드의 열 개수
 let roundRow = [2, 2, 3, 4, 5]; // 각 라운드의 행 개수
+let maxRound = roundTime.length - 1;
 
 // 2. 게임 카드 관련 변수
 let CARD_PER_COLUMN = 6; // 카드 한 열의 개수
@@ -26,7 +27,7 @@ const timerDisplay = document.getElementById('timerDisplay'); // 타이머 디�
 
 // 4. 아이템 관련 변수
 const itemContainer = document.getElementById('items'); // 아이템 슬롯 컨테이너
-const itemTypes = ['시간 추가', '아이템 B']; // 아이템 종류
+const itemTypes = ['시간 추가', '랜덤 매칭', '전체 보기']; // 아이템 종류
 
 // 5. 기타 변수
 let startPoint = { X: 0, Y: 0 }; // 시작 점
@@ -90,17 +91,25 @@ function createCard(value) {
     const front = document.createElement('div');
     front.classList.add('front');
 
-    const frontHeading = document.createElement('h1');
-    frontHeading.textContent = value;
-    front.appendChild(frontHeading); // 앞면에 제목 추가
-
     // 뒷면 생성
     const back = document.createElement('div');
     back.classList.add('back');
 
+    /* 
+    const frontHeading = document.createElement('h1');
+    frontHeading.textContent = value; // 나오는거거
+    front.appendChild(frontHeading); // 앞면에 제목 추가
+    */
+
+    /*
     const backHeading = document.createElement('h1');
-    backHeading.textContent = '뒷면';
+    backHeading.textContent = '뒷면'; //나오는거거
     back.appendChild(backHeading); // 뒷면에 제목 추가
+    */
+
+    const cardImage = document.createElement('img');
+    cardImage.src = `cardImages/${value}.png`; // 이미지 경로를 설정
+    back.appendChild(cardImage); // 이미지 추가
 
     // 앞면과 뒷면을 카드에 추가
     card.appendChild(front);
@@ -203,8 +212,8 @@ function checkRoundClear() {
     let allFlipped = document.querySelectorAll('.card.flipped').length === CARD_PER_ROW * CARD_PER_COLUMN;
     if (allFlipped) {
         if (timerId) clearInterval(timerId); // 기존 타이머 정리
-        setTimeout(nextRound, 3000);
         showRound();
+        setTimeout(nextRound, 3000);
     }
 }
 
@@ -249,6 +258,23 @@ function showRound() {
     const text = document.getElementById("roundText");
 
     if (!roundBox || !text) return;
+    if (currentRound == maxRound) {
+        roundBox.style.transition = `transform 500ms linear`;
+        roundBox.style.transform = "translate(0, 0)";
+
+        text.innerText = `클리어`;
+        text.style.transition = `transform 3000ms linear`;
+        text.style.transform = "translate(100vw, 0)";
+
+        setTimeout(() => {
+            roundBox.style.transform = "translate(0%, -100%)";
+        }, 3000);
+        setTimeout(() => {
+            text.style.transition = `transform 1ms linear`;
+            text.style.transform = "translate(-100vw, 0)";
+        }, 3500);
+        return;
+    }
 
     roundBox.style.transition = `transform 500ms linear`;
     roundBox.style.transform = "translate(0, 0)";
@@ -261,8 +287,48 @@ function showRound() {
         roundBox.style.transform = "translate(0%, -100%)";
     }, 3000);
     setTimeout(() => {
+        text.style.transition = `transform 1ms linear`;
         text.style.transform = "translate(-100vw, 0)";
-    }, 4000);
+    }, 3500);
+}
+
+/**
+ * 슬롯의 데이터를 초기화하는 함수
+ * 
+ * 클릭된 슬롯의 데이터를 비우고, 빈 슬롯을 위로 이동시킵니다.
+ * 
+ * @param {HTMLElement} slot 초기화할 슬롯 요소
+ */
+function resetSlotData(slot) {
+    slot.dataset.item = ''; // 클릭된 슬롯의 데이터 초기화
+    slot.innerText = '';
+    shiftItemsUp();
+}
+
+/**
+ * 특수 아이템 슬롯을 생성하는 함수
+ * 
+ * 특정 슬롯을 생성하고, 클릭 시 특정 동작을 수행하는 이벤트 리스너를 추가합니다.
+ * 
+ * @param {number} slotCount 생성할 슬롯 개수
+ */
+function createSpecialItemSlots(slotCount) {
+    const slot = document.createElement('div');
+    slot.classList.add('specialItem');
+    slot.dataset.slotId = slotCount-1;
+    slot.dataset.item = ''; // 초기 아이템 값 설정
+        
+    // 슬롯 클릭 시 해당 아이템 확인
+    slot.addEventListener('click', function() {
+        const item = slot.dataset.item;
+        console.log('클릭된 아이템:', item);
+        if (item == '전체 보기') {
+            rotateUnflippedCards();
+            resetSlotData(slot);
+        }
+    });
+        
+    itemContainer.appendChild(slot);
 }
 
 /**
@@ -271,10 +337,7 @@ function showRound() {
  * 슬롯 클릭 시 해당 아이템에 따라 동작을 수행하는 함수
  */
 function createItemSlots(slotCount) {
-    // 기존 아이템 슬롯 초기화
-    itemContainer.innerHTML = '';
-    
-    for (let i = 0; i < slotCount; i++) {
+    for (let i = 0; i < slotCount - 1; i++) {
         const slot = document.createElement('div');
         slot.classList.add('item');
         slot.dataset.slotId = i;
@@ -287,18 +350,14 @@ function createItemSlots(slotCount) {
             switch (item) {
                 case '시간 추가':
                     sec += 10;
-                    slot.dataset.item = ''; // 클릭된 슬롯의 데이터 초기화
-                    slot.innerText = '';
-                    shiftItemsUp();
+                    resetSlotData(slot);
                     break;
-                case '아이템 B':
+                case '랜덤 매칭':
                     if (isFlipping1) {
                         break;
                     }
                     autoMatch();
-                    slot.dataset.item = ''; // 클릭된 슬롯의 데이터 초기화
-                    slot.innerText = '';
-                    shiftItemsUp();
+                    resetSlotData(slot);
                     break;
                 default:
                     break;
@@ -307,6 +366,8 @@ function createItemSlots(slotCount) {
         
         itemContainer.appendChild(slot);
     }
+
+    createSpecialItemSlots(slotCount);
 }
 
 /**
@@ -325,7 +386,9 @@ function shiftItemsUp() {
         } else if (firstEmptySlotIndex !== -1) {
             // 빈 슬롯을 찾은 후, 그 이후 아이템을 위로 이동
             slots[firstEmptySlotIndex].dataset.item = slot.dataset.item;
-            slots[firstEmptySlotIndex].innerText = slot.dataset.item;
+            const itemImage = document.createElement('img');
+            itemImage.src = `cardImages/${slot.dataset.item}.png`;
+            slots[firstEmptySlotIndex].appendChild(itemImage)
             slot.dataset.item = '';
             slot.innerText = '';
             firstEmptySlotIndex++;
@@ -333,11 +396,10 @@ function shiftItemsUp() {
     }
 }
 
-/**
+/** 안씀
  * 랜덤 아이템을 빈 슬롯에 추가하는 함수
  * 
  * 슬롯을 검색하여 빈 슬롯에 랜덤으로 아이템을 할당
- */
 function addRandomItem() {
     const slots = document.querySelectorAll('.item');
     const emptySlots = Array.from(slots).filter(slot => !slot.dataset.item);
@@ -349,6 +411,69 @@ function addRandomItem() {
         randomSlot.innerText = randomItem;
     } else {
         console.log('빈 슬롯이 없습니다');
+    }
+}
+*/
+
+/**
+ * 아이템을 빈 슬롯 또는 특수 슬롯에 추가하는 함수
+ * 
+ * @param {number} itemValue 추가할 아이템의 인덱스 값
+ */
+function addItem(itemValue) {
+    const slots = document.querySelectorAll('.item');
+    const specialSlots = document.querySelectorAll('.specialItem');
+    const emptySlots = Array.from(slots).filter(slot => !slot.dataset.item);
+    const emptySpecialSlots = Array.from(specialSlots).filter(specialSlots => !specialSlots.dataset.item);
+    const itemImage = document.createElement('img');
+    itemImage.src = `cardImages/${itemTypes[itemValue]}.png`;
+
+    if (itemValue == 2) {
+        if (emptySpecialSlots.length > 0) {
+            emptySpecialSlots[0].dataset.item = itemTypes[itemValue];
+            emptySpecialSlots[0].appendChild(itemImage);
+            //emptySpecialSlots[0].innerText = itemTypes[itemValue];
+        } else {
+            console.log('빈 슬롯이 없습니다');
+        }
+    } else {
+        if (emptySlots.length > 0) {
+            emptySlots[0].dataset.item = itemTypes[itemValue];
+            emptySlots[0].appendChild(itemImage);
+            //emptySlots[0].innerText = itemTypes[itemValue];
+        } else {
+            console.log('빈 슬롯이 없습니다');
+        }
+    }
+}
+
+/**
+ * 현재 라운드에 따라 아이템을 추가하는 함수
+ */
+function addRoundItem() {
+    switch (currentRound) {
+        case 1:
+            addItem(0);
+            addItem(1);
+            break;
+        case 2:
+            addItem(0);
+            addItem(1);
+            break;
+        case 3:
+            addItem(0);
+            addItem(1);
+            addItem(1);
+            addItem(2);
+            break;
+        case 4:
+            addItem(0);
+            addItem(1);
+            addItem(1);
+            addItem(2);
+            break;
+        default:
+            break;
     }
 }
 
@@ -363,7 +488,7 @@ function nextRound() {
     currentRound++;
     
     if (currentRound < roundColumn.length) {
-        addRandomItem();
+        addRoundItem();
         gameSet(currentRound);
         startTimer(roundTime[currentRound]);
     } else {

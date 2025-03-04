@@ -14,6 +14,13 @@ body {
     margin: 0;
 }
 
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-use-select: none;
+    user-select: none;
+}
+
 .container {
     width: 90%;
     margin: auto;
@@ -69,7 +76,7 @@ body {
 }
 
 .item-container {
-    height: 56vh;
+    height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,24 +85,42 @@ body {
     border-radius: 10px;
 }
   
-  .item-text {
+.item-text {
     font-size: 3vh;
     margin-bottom: 20px;
 }
   
-  .items {
+.items {
     width: 10vh;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     gap: 2vh;
 }
   
-  .item {
+.item {
+    display: flex;
     background-color: #f0f0f0;
     color: #323d58;
     border-radius: 10px;
     aspect-ratio: 4 / 3; /* 3:4 비율을 유지 */
+    cursor: pointer; 
+    justify-content: center;
+}
+
+.specialItem {
+    display: flex;
+    background-color: #f0f0f0;
+    color: #323d58;
+    border-radius: 10px;
+    aspect-ratio: 4 / 4.5; /* 3:4 비율을 유지 */
+    cursor: pointer; 
+    justify-content: center;
+}
+
+.items img {
+    width: 70%;
+    object-fit: cover;
 }
 
 @media (max-width: 600px) {
@@ -138,24 +163,37 @@ body {
         border-radius: 10px;
     }
       
-      .item-text {
+    .item-text {
         font-size: 6vw;
         margin-bottom: 2vw;
     }
       
-      .items {
+    .items {
         width: auto;
         height: 10vw;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         grid-template-rows: 1fr;
         gap: 2vw;
     }
       
-      .item {
+    .item {
+        display: flex;
         background-color: #f0f0f0;
         color: #323d58;
-        border-radius: 8px;
+        border-radius: 10px;
         aspect-ratio: 4 / 3; /* 3:4 비율을 유지 */
+        cursor: pointer; 
+        justify-content: center;
+    }
+
+    .specialItem {
+        display: flex;
+        background-color: #f0f0f0;
+        color: #323d58;
+        border-radius: 10px;
+        aspect-ratio: 4 / 4.5; /* 3:4 비율을 유지 */
+        cursor: pointer; 
+        justify-content: center;
     }
 }
