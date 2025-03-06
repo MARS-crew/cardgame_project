@@ -1,0 +1,182 @@
+ /*폰트*/
+ @font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'KCC-Hanbit';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/KCC-Hanbit.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+/*배경*/
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'KCC-Hanbit', 'KCC-Hanbit' !important;
+    background: url('photo/background.png') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+/* 전체 화면 고정 */
+.mainScreen {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+/* 좌측 영역 (랭크 리스트) */
+div.left {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    box-sizing: border-box;
+    color: white;
+    font-size: 5%;
+}
+.moon {
+    width: 30vw;
+    height: 30vw;
+    position: absolute;
+    left: -15vw; 
+    bottom: 17vh;
+}
+/* 랭크 리스트 순위권 위치 */
+.rank {
+    position: absolute;
+    width: 17vw; height: 3vw;
+    border-radius: 0.5vw;
+    font-size: 30px;
+    text-align: center;
+    background-color: #2b334b;
+    line-height: 3vw;
+}
+/* 랭크 이미지 */
+.Gold1 {
+    width: 4vw; height: 4vw;
+    margin-top: 1%; margin-bottom: 1%;
+    position: absolute;
+    top: 10%; left: 10%;
+}
+.Silver2 {
+    width: 4vw; height: 4vw;
+    margin-top: 1%; margin-bottom: 1%;
+    position: absolute;
+    top: 20%; left: 20%;
+}
+.Bronze3 {
+    width: 4vw; height: 4vw;
+    margin-top: 1%; margin-bottom: 1%;
+    position: absolute;
+    top: 30%; left: 30%; 
+}
+.TheOther4 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 40%; left: 35%;
+}
+.TheOther5 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 50%; left: 35%;
+}
+.TheOther6 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 60%; left: 30%;
+}
+.TheOther7 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 70%; left: 20%;
+}
+.TheOther8 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 80%; left: 10%;
+}
+
+/* 우측 영역 (게임 메인 요소) */
+div.right {
+    position: absolute;
+    top:50px;
+    left:650px;
+    right: 0;
+    margin-top: 29px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+h1 {
+    font-family: 'ONE Mobile POP OTF';
+    font-size: 72px;
+    color:#fff;
+    margin: 32px 0;
+}
+
+/*점수 판*/
+.name {
+    font-family: 'KCC-Hanbit';
+    color: #fff;
+    font-size: 43px;
+    position: relative;
+    top:20px;
+}
+.score {
+    font-family: 'KCC-Hanbit';
+    color: #fff;
+    font-size: 29px;
+    position: relative;
+    top:20px;
+}
+
+/*메인화면으로 이동 버튼*/
+button {
+    font-family: 'KCC-Hanbit';
+    box-sizing: border-box;
+    width: 576px;
+    height: 65px; 
+    font-size: 32px;
+    color: white;
+    text-align:center;
+    margin: 50px;
+    
+    border: rgb(235, 236, 239);
+    border-radius: 20px;
+    outline: 1px solid rgb(235, 236, 239);
+    background-color: rgba(235, 236, 239, 0.4);
+    font-family: 'KCC-Hanbit';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 32px;
+    color: white;
+        
+}
+
+/*곰 일러스트 위치*/
+.astronaut-bear {
+    transform: rotate(40deg);
+    transform-origin: top left;
+    position: absolute;
+    top:415px;
+    right: 320px;
+    width: 100px;
+    height: auto;
+    
+}
