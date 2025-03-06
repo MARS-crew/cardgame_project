@@ -16,7 +16,7 @@ body {
     margin: 0;
     overflow: hidden;
     font-family: 'KCC-Hanbit', 'KCC-Hanbit' !important;
-    background: url('photo/background.png') no-repeat center center fixed;
+    background: url('background.png') no-repeat center center fixed;
     background-size: cover;
     overflow: hidden;
     display: flex;
