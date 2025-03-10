@@ -1,36 +1,42 @@
 // 1. 게임 설정 관련 변수
-let isGameStarted = false; // 게임 시작 여부
-let currentRound = 0; // 현재 라운드
-let isRoundCleared = false; // 라운드 클리어 여부
-let score = 0; // 현재 점수
-let sec = 0; // 타이머에 남은 시간
+let isGameStarted = false; // 게임 시작 여부 (초기값: false)
+let currentRound = 0; // 현재 진행 중인 라운드 번호
+let isRoundCleared = false; // 현재 라운드가 클리어되었는지 여부 (초기값: false)
+let score = 0; // 현재 점수 (초기값: 0)
+let sec = 0; // 타이머에 남은 시간 (초 단위)
 
-let roundTime = [20, 30, 40, 50, 60]; // 각 라운드의 시간
+// 각 라운드별 설정
+let roundTime = [20, 30, 40, 50, 60]; // 각 라운드의 제한 시간 (초 단위)
 let roundColumn = [3, 6, 6, 6, 6]; // 각 라운드의 열 개수
 let roundRow = [2, 2, 3, 4, 5]; // 각 라운드의 행 개수
-let maxRound = roundTime.length - 1;
+let maxRound = roundTime.length - 1; // 최대 라운드 번호 (라운드 수 - 1)
 
 // 2. 게임 카드 관련 변수
-let CARD_PER_COLUMN = 6; // 카드 한 열의 개수
-let CARD_PER_ROW = 5; // 카드 한 행의 개수
-let flippedCards = []; // 뒤집힌 카드들을 저장하는 배열
-let isFlipping1 = false; // 카드 한 장이 회전 중
-let isFlipping2 = false; // 카드 두 장이 회전 중
-const flipContainer = document.querySelector('.flip'); // 카드 컨테이너
-const cardValues = []; // 카드 값 배열
-const newCard = []; // 새 카드 배열
+let CARD_PER_COLUMN = 6; // 카드 한 열에 배치되는 카드 개수
+let CARD_PER_ROW = 5; // 카드 한 행에 배치되는 카드 개수
+let flippedCards = []; // 현재까지 뒤집힌 카드들을 저장하는 배열
+let isFlipping1 = false; // 첫 번째 카드가 회전 중인지 여부 (초기값: false)
+let isFlipping2 = false; // 두 번째 카드가 회전 중인지 여부 (초기값: false)
+const flipContainer = document.querySelector('.flip'); // 카드가 뒤집히는 컨테이너 요소
+const cardValues = []; // 카드 값 배열 (각 카드의 값)
+const newCard = []; // 새로 생성된 카드들을 저장하는 배열
 
 // 3. 타이머 관련 변수
-let timerId; // 타이머 ID
+let timerId; // 타이머의 고유 ID (setInterval로 생성된 ID)
 const timerContainer = document.querySelector(".timer"); // 타이머 표시 컨테이너
-const timerDisplay = document.getElementById('timerDisplay'); // 타이머 디스플레이
+const timerDisplay = document.getElementById('timerDisplay'); // 실제로 타이머가 표시될 DOM 요소
 
 // 4. 아이템 관련 변수
-const itemContainer = document.getElementById('items'); // 아이템 슬롯 컨테이너
-const itemTypes = ['시간 추가', '랜덤 매칭', '전체 보기']; // 아이템 종류
+const itemContainer = document.getElementById('items'); // 아이템 슬롯 컨테이너 요소
+const itemTypes = ['시간 추가', '랜덤 매칭', '전체 보기']; // 사용할 수 있는 아이템 종류 목록
 
 // 5. 기타 변수
-let startPoint = { X: 0, Y: 0 }; // 시작 점
+let startPoint = { X: 0, Y: 0 }; // 게임 시작 위치 좌표 (X, Y)
+
+// 모달을 위한 변수 (게임 종료 시 메시지 또는 결과를 표시)
+const modal = document.querySelector('.modal'); // 모달 요소
+const overlay = document.querySelector('.modal-overlay'); // 모달 배경 오버레이
+const modalContent = modal.querySelector('.modal-content'); // 모달 내 실제 내용 표시 요소
 
 /**
  * 게임을 시작하는 함수
@@ -213,7 +219,7 @@ function checkRoundClear() {
     if (allFlipped) {
         if (timerId) clearInterval(timerId); // 기존 타이머 정리
         showRound();
-        setTimeout(nextRound, 3000);
+        nextRound();
     }
 }
 
@@ -248,10 +254,7 @@ function startTimer(ssec) {
 }
 
 /**
- * 주어진 수만큼 아이템 슬롯을 생성하고,
- * 
- * 슬롯 클릭 시 해당 아이템에 따라 동작을 수행하는 함수
- * @param {number} slotCount 아이템 슬롯 개수
+ * 라운드를 표시하고 애니메이션을 처리하는 함수입니다.
  */
 function showRound() {
     const roundBox = document.getElementById("roundBox");
@@ -290,6 +293,17 @@ function showRound() {
         text.style.transition = `transform 1ms linear`;
         text.style.transform = "translate(-100vw, 0)";
     }, 3500);
+
+    const slots = document.querySelectorAll('.item');
+    const specialSlots = document.querySelectorAll('.specialItem');
+    const emptySlots = Array.from(slots).filter(slot => !slot.dataset.item);
+    const emptySpecialSlots = Array.from(specialSlots).filter(specialSlots => !specialSlots.dataset.item);
+
+    if ((emptySlots.length > 0) || (emptySpecialSlots.length > 0)) {
+        setTimeout(() => {
+            showRoundItem();
+        }, 1000);
+    }
 }
 
 /**
@@ -332,9 +346,10 @@ function createSpecialItemSlots(slotCount) {
 }
 
 /**
- * 주어진 수만큼 아이템 슬롯을 생성하고
+ * 주어진 수만큼 아이템 슬롯을 생성하고,
  * 
  * 슬롯 클릭 시 해당 아이템에 따라 동작을 수행하는 함수
+ * @param {number} slotCount 아이템 슬롯 개수
  */
 function createItemSlots(slotCount) {
     for (let i = 0; i < slotCount - 1; i++) {
@@ -396,25 +411,6 @@ function shiftItemsUp() {
     }
 }
 
-/** 안씀
- * 랜덤 아이템을 빈 슬롯에 추가하는 함수
- * 
- * 슬롯을 검색하여 빈 슬롯에 랜덤으로 아이템을 할당
-function addRandomItem() {
-    const slots = document.querySelectorAll('.item');
-    const emptySlots = Array.from(slots).filter(slot => !slot.dataset.item);
-    
-    if (emptySlots.length > 0) {
-        const randomItem = itemTypes[Math.floor(Math.random() * itemTypes.length)];
-        const randomSlot = emptySlots[0];
-        randomSlot.dataset.item = randomItem;
-        randomSlot.innerText = randomItem;
-    } else {
-        console.log('빈 슬롯이 없습니다');
-    }
-}
-*/
-
 /**
  * 아이템을 빈 슬롯 또는 특수 슬롯에 추가하는 함수
  * 
@@ -426,12 +422,15 @@ function addItem(itemValue) {
     const emptySlots = Array.from(slots).filter(slot => !slot.dataset.item);
     const emptySpecialSlots = Array.from(specialSlots).filter(specialSlots => !specialSlots.dataset.item);
     const itemImage = document.createElement('img');
+    const modalItemImage = document.createElement('img');
     itemImage.src = `cardImages/${itemTypes[itemValue]}.png`;
+    modalItemImage.src = `cardImages/${itemTypes[itemValue]}.png`;
 
     if (itemValue == 2) {
         if (emptySpecialSlots.length > 0) {
             emptySpecialSlots[0].dataset.item = itemTypes[itemValue];
             emptySpecialSlots[0].appendChild(itemImage);
+            modalContent.appendChild(modalItemImage);
             //emptySpecialSlots[0].innerText = itemTypes[itemValue];
         } else {
             console.log('빈 슬롯이 없습니다');
@@ -440,6 +439,7 @@ function addItem(itemValue) {
         if (emptySlots.length > 0) {
             emptySlots[0].dataset.item = itemTypes[itemValue];
             emptySlots[0].appendChild(itemImage);
+            modalContent.appendChild(modalItemImage);
             //emptySlots[0].innerText = itemTypes[itemValue];
         } else {
             console.log('빈 슬롯이 없습니다');
@@ -453,20 +453,14 @@ function addItem(itemValue) {
 function addRoundItem() {
     switch (currentRound) {
         case 1:
-            addItem(0);
-            addItem(1);
-            break;
         case 2:
+            modalContent.innerHTML = '';
             addItem(0);
             addItem(1);
             break;
         case 3:
-            addItem(0);
-            addItem(1);
-            addItem(1);
-            addItem(2);
-            break;
         case 4:
+            modalContent.innerHTML = '';
             addItem(0);
             addItem(1);
             addItem(1);
@@ -488,12 +482,19 @@ function nextRound() {
     currentRound++;
     
     if (currentRound < roundColumn.length) {
-        addRoundItem();
-        gameSet(currentRound);
-        startTimer(roundTime[currentRound]);
+        setTimeout(() => {
+            addRoundItem();
+        }, 1000);
+        
+        setTimeout(() => {
+            gameSet(currentRound);
+            startTimer(roundTime[currentRound]);
+        }, 3000);
     } else {
-        alert("🎉 게임 클리어! 축하합니다!");
-        isGameStarted = false;
+        setTimeout(() => {
+            alert("🎉 게임 클리어! 축하합니다!");
+            isGameStarted = false;
+        }, 3000);
     }
 }
 
@@ -538,10 +539,13 @@ function autoMatch() {
         const [firstCard, secondCard] = matchedPair; // 첫 번째, 두 번째 카드
 
         // 마우스 이벤트 시뮬레이션
+        const mouseDownEvent = new MouseEvent('mousedown', {});
         const mouseUpEvent = new MouseEvent('mouseup', {});
 
         // 첫 번째 카드와 두 번째 카드에 대해 mouseup 이벤트를 트리거
+        firstCard.dispatchEvent(mouseDownEvent);
         firstCard.dispatchEvent(mouseUpEvent);
+        secondCard.dispatchEvent(mouseDownEvent);
         secondCard.dispatchEvent(mouseUpEvent);
     } else {
         console.log("매칭 가능한 카드가 없습니다.");
@@ -568,6 +572,21 @@ function rotateUnflippedCards() {
         });
         isFlipping2 = false;
     }, 3000); // 3초 후 원래대로 회전
+}
+
+/**
+ * 모달을 표시하고 애니메이션을 처리하는 함수입니다.
+ */
+function showRoundItem() {
+    // 모달 표시
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+    
+    // 2초 후 모달 닫기
+    setTimeout(() => {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    }, 2000);
 }
 
 gameStart();
