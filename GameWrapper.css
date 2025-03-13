@@ -40,3 +40,38 @@
     width: 80%;
     object-fit: cover;
 }
+
+
+/* 맞은 카드 효과 */
+.card.matched {
+    animation: matchEffect 0.5s ease-out;
+}
+
+@keyframes matchEffect {
+    0% {
+        box-shadow: 0 0 0px yellow;
+    }
+    50% {
+        box-shadow: 0 0 20px yellow;
+    }
+    100% {
+        box-shadow: 0 0 0px yellow;
+    }
+}
+
+/* 틀린 카드 효과 */
+.card.mismatch {
+    animation: mismatchEffect 0.5s ease-out;
+}
+
+@keyframes mismatchEffect {
+    0% {
+        box-shadow: 0 0 0px red;
+    }
+    50% {
+        box-shadow: 0 0 20px red;
+    }
+    0% {
+        box-shadow: 0 0 0px red;
+    }
+}

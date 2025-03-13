@@ -12,8 +12,8 @@ let roundRow = [2, 2, 3, 4, 5]; // 각 라운드의 행 개수
 let maxRound = roundTime.length - 1; // 최대 라운드 번호 (라운드 수 - 1)
 
 // 2. 게임 카드 관련 변수
-let CARD_PER_COLUMN = 6; // 카드 한 열에 배치되는 카드 개수
-let CARD_PER_ROW = 5; // 카드 한 행에 배치되는 카드 개수
+let CARD_PER_COLUMN = 0; // 카드 한 열에 배치되는 카드 개수
+let CARD_PER_ROW = 0; // 카드 한 행에 배치되는 카드 개수
 let flippedCards = []; // 현재까지 뒤집힌 카드들을 저장하는 배열
 let isFlipping1 = false; // 첫 번째 카드가 회전 중인지 여부 (초기값: false)
 let isFlipping2 = false; // 두 번째 카드가 회전 중인지 여부 (초기값: false)
@@ -101,20 +101,8 @@ function createCard(value) {
     const back = document.createElement('div');
     back.classList.add('back');
 
-    /* 
-    const frontHeading = document.createElement('h1');
-    frontHeading.textContent = value; // 나오는거거
-    front.appendChild(frontHeading); // 앞면에 제목 추가
-    */
-
-    /*
-    const backHeading = document.createElement('h1');
-    backHeading.textContent = '뒷면'; //나오는거거
-    back.appendChild(backHeading); // 뒷면에 제목 추가
-    */
-
     const cardImage = document.createElement('img');
-    cardImage.src = `cardImages/${value}.png`; // 이미지 경로를 설정
+    cardImage.src = `asset/cardImages/${value}.png`; // 이미지 경로를 설정
     back.appendChild(cardImage); // 이미지 추가
 
     // 앞면과 뒷면을 카드에 추가
@@ -189,25 +177,43 @@ function flipCard(selectedCard) {
         if (firstCard.dataset.value === secondCard.dataset.value) {
             score += 55;
             document.getElementById("score").textContent = score;
+
+            setTimeout(() => { 
+                // 맞은 카드에 효과 추가
+                firstCard.classList.add('matched');
+                secondCard.classList.add('matched');
+                const correctSound = new Audio('asset/DeviceConnect.wav'); // 맞았을 때 효과음
+                correctSound.play(); // 맞았을 때 효과음 재생
+            }, 500);
+
             flippedCards = [];
             isFlipping1 = false;
             isFlipping2 = false;
             checkRoundClear();
         } else {
-            setTimeout(() => { //  초 후 제거
-                firstCard.classList.remove('flipped');
-                secondCard.classList.remove('flipped');
+            setTimeout(() => {
+                // 틀린 카드에 효과 추가
+                firstCard.classList.add('mismatch');
+                secondCard.classList.add('mismatch');
+                const wrongSound = new Audio('asset/DeviceConnectionError.wav'); // 틀렸을 때 효과음
+                wrongSound.play(); // 틀렸을 때 효과음 재생
+            }, 500);
+
+            setTimeout(() => { 
+                firstCard.classList.remove('flipped', 'mismatch');
+                secondCard.classList.remove('flipped', 'mismatch');
                 firstCard.currentRotate = {X: 0, Y: 0};
                 secondCard.currentRotate = {X: 0, Y: 0};
                 flippedCards = [];
                 isFlipping1 = false;
                 isFlipping2 = false;
-                firstCard.style.transform = `rotateX(${selectedCard.currentRotate.X}deg) rotateY(${selectedCard.currentRotate.Y}deg)`;
-                secondCard.style.transform = `rotateX(${selectedCard.currentRotate.X}deg) rotateY(${selectedCard.currentRotate.Y}deg)`;
+                firstCard.style.transform = `rotateX(${firstCard.currentRotate.X}deg) rotateY(${firstCard.currentRotate.Y}deg)`;
+                secondCard.style.transform = `rotateX(${secondCard.currentRotate.X}deg) rotateY(${secondCard.currentRotate.Y}deg)`;
             }, 1000);
         }
     }
 }
+
 
 /**
  * 모든 카드가 뒤집혀졌는지 확인하고
@@ -220,6 +226,9 @@ function checkRoundClear() {
         if (timerId) clearInterval(timerId); // 기존 타이머 정리
         showRound();
         nextRound();
+        const clearSound = new Audio('asset/alarm-3.mp3'); // 맞았을 때 효과음
+        clearSound.volume = 0.5;  // 0.5는 50% 볼륨
+        clearSound.play(); // 클리어 효과음 재생
     }
 }
 
@@ -229,28 +238,34 @@ function checkRoundClear() {
 function startTimer(ssec) {
     sec = ssec;
     timerDisplay.textContent = sec + "초";
-    var num = 360;
-    timerContainer.style.setProperty("--timerA", num + "deg")
+    let startTime = null;
+    let num = 360;
 
-    timerId = setInterval(() => {
-        sec--;
+    function updateTimer(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsedTime = (timestamp - startTime) / 1000;
 
-        timerContainer.style.setProperty("--timerA", num + "deg");
-        if (sec < 10) {
-            timerContainer.style.background = ` conic-gradient(crimson var(--timerA) ,crimson 0deg ,#293047 0deg,#293047 360deg)`
+        const remainingTime = Math.max(sec - elapsedTime, 0);
+        timerDisplay.textContent = Math.ceil(remainingTime) + "초";
+
+        const angle = (remainingTime / sec) * 360;
+        timerContainer.style.setProperty("--timerA", angle + "deg");
+
+        if (remainingTime < 10) {
+            timerContainer.style.background = `conic-gradient(crimson var(--timerA), crimson 0deg, #293047 0deg, #293047 360deg)`;
         } else {
-            timerContainer.style.background = ` conic-gradient(#E1E2E7 var(--timerA) ,#E1E2E7 0deg ,#293047 0deg,#293047 360deg)`
+            timerContainer.style.background = `conic-gradient(#E1E2E7 var(--timerA), #E1E2E7 0deg, #293047 0deg, #293047 360deg)`;
         }
-        num = num - (num / sec);
 
-        timerDisplay.textContent = sec + "초";
-
-        if (sec < 0) {
-            clearInterval(timerId);
-            isGameStarted = false;
+        if (remainingTime > 0) {
+            timerId = requestAnimationFrame(updateTimer);
+        } else {
             timerDisplay.textContent = "끝";
+            isGameStarted = false;
         }
-    }, 1000);
+    }
+
+    timerId = requestAnimationFrame(updateTimer);
 }
 
 /**
@@ -262,36 +277,21 @@ function showRound() {
 
     if (!roundBox || !text) return;
     if (currentRound == maxRound) {
-        roundBox.style.transition = `transform 500ms linear`;
-        roundBox.style.transform = "translate(0, 0)";
-
+        roundBox.style.animation = "showRoundBox 3s linear";
         text.innerText = `클리어`;
-        text.style.transition = `transform 3000ms linear`;
-        text.style.transform = "translate(100vw, 0)";
-
-        setTimeout(() => {
-            roundBox.style.transform = "translate(0%, -100%)";
-        }, 3000);
-        setTimeout(() => {
-            text.style.transition = `transform 1ms linear`;
-            text.style.transform = "translate(-100vw, 0)";
-        }, 3500);
+        text.style.animation = "showRound 3s linear";
+        
         return;
     }
 
-    roundBox.style.transition = `transform 500ms linear`;
-    roundBox.style.transform = "translate(0, 0)";
+    roundBox.style.animation = "showRoundBox 3.5s linear";
 
     text.innerText = `${currentRound+2}라운드`;
-    text.style.transition = `transform 3000ms linear`;
-    text.style.transform = "translate(100vw, 0)";
+    text.style.animation = "showRound 3s linear";
 
     setTimeout(() => {
-        roundBox.style.transform = "translate(0%, -100%)";
-    }, 3000);
-    setTimeout(() => {
-        text.style.transition = `transform 1ms linear`;
-        text.style.transform = "translate(-100vw, 0)";
+        roundBox.style.animation = "none";
+        text.style.animation = "none";
     }, 3500);
 
     const slots = document.querySelectorAll('.item');
@@ -402,7 +402,7 @@ function shiftItemsUp() {
             // 빈 슬롯을 찾은 후, 그 이후 아이템을 위로 이동
             slots[firstEmptySlotIndex].dataset.item = slot.dataset.item;
             const itemImage = document.createElement('img');
-            itemImage.src = `cardImages/${slot.dataset.item}.png`;
+            itemImage.src = `asset/cardImages/${slot.dataset.item}.png`;
             slots[firstEmptySlotIndex].appendChild(itemImage)
             slot.dataset.item = '';
             slot.innerText = '';
@@ -423,8 +423,8 @@ function addItem(itemValue) {
     const emptySpecialSlots = Array.from(specialSlots).filter(specialSlots => !specialSlots.dataset.item);
     const itemImage = document.createElement('img');
     const modalItemImage = document.createElement('img');
-    itemImage.src = `cardImages/${itemTypes[itemValue]}.png`;
-    modalItemImage.src = `cardImages/${itemTypes[itemValue]}.png`;
+    itemImage.src = `asset/cardImages/${itemTypes[itemValue]}.png`;
+    modalItemImage.src = `asset/cardImages/${itemTypes[itemValue]}.png`;
 
     if (itemValue == 2) {
         if (emptySpecialSlots.length > 0) {

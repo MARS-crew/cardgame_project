@@ -24,7 +24,6 @@
         #293047 0deg,
         #293047 360deg
     );
-    animation: Timer_Animation 0.5s ease-in-out;/*실패*/
     border-radius: 50%;
 }
 
