@@ -140,7 +140,7 @@ body {
 }
 
 .item-container {
-    height: 60vh;
+    height: 57vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -217,7 +217,7 @@ body {
     }
 
     .item-container {
-        width: 80vw;
+        width: 84vw;
         height: auto;
         display: flex;
         flex-direction: column;
@@ -234,7 +234,7 @@ body {
       
     .items {
         width: auto;
-        height: 10vw;
+        height: 16vw;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: 1fr;

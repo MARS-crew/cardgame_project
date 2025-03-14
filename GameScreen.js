@@ -223,11 +223,11 @@ function flipCard(selectedCard) {
 function checkRoundClear() {
     let allFlipped = document.querySelectorAll('.card.flipped').length === CARD_PER_ROW * CARD_PER_COLUMN;
     if (allFlipped) {
-        if (timerId) clearInterval(timerId); // 기존 타이머 정리
+        if (timerId) cancelAnimationFrame(timerId); // 기존 타이머 정리
         showRound();
         nextRound();
         const clearSound = new Audio('asset/alarm-3.mp3'); // 맞았을 때 효과음
-        clearSound.volume = 0.5;  // 0.5는 50% 볼륨
+        clearSound.volume = 0.1;  // 0.5는 50% 볼륨
         clearSound.play(); // 클리어 효과음 재생
     }
 }
