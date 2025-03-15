@@ -61,13 +61,14 @@ div.left {
     text-align: center;
     background-color: #2b334b;
     line-height: 3vw;
+
 }
 /* 랭크 이미지 */
 .Gold1 {
     width: 4vw; height: 4vw;
     margin-top: 1%; margin-bottom: 1%;
     position: absolute;
-    top: 10%; left: 10%;
+    top: 13%; left: 10%;
 }
 .Silver2 {
     width: 4vw; height: 4vw;
@@ -103,7 +104,7 @@ div.left {
     width: 3.5vw; height: 3.5vw;
     margin-top: 2%; margin-bottom: 2%;
     position: absolute;
-    top: 70%; left: 20%;
+    top: 70%; left: 23%;
 }
 .TheOther8 {
     width: 3.5vw; height: 3.5vw;
@@ -180,3 +181,6 @@ button {
     height: auto;
     
 }
+
+
+
