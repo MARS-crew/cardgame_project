@@ -1,0 +1,216 @@
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'KCC-Hanbit';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/KCC-Hanbit.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+/*배경*/
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'KCC-Hanbit', 'KCC-Hanbit' !important;
+    background: url('background.png') no-repeat center center fixed;
+    background-image: url("./MainScreen_Photo/background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+/* 전체 화면 고정 */
+.mainScreen {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+/* 좌측 영역 (랭크 리스트) */
+div.left {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    box-sizing: border-box;
+    color: white;
+    font-size: 5%;
+}
+.moon {
+    width: 30vw;
+    height: 30vw;
+    position: absolute;
+    left: -15vw; 
+    bottom: 17vh;
+}
+/* 랭크 리스트 순위권 위치 */
+.rank {
+    position: absolute;
+    width: 17vw; height: 3vw;
+    border-radius: 0.5vw;
+    font-size: 30px;
+    text-align: center;
+    background-color: #2b334b;
+    line-height: 3vw;
+}
+/* 랭크 이미지 */
+.Gold1 {
+    width: 4vw; height: 4vw;
+    margin-top: 1%; margin-bottom: 1%;
+    position: absolute;
+    top: 7%; left: 7%;
+}
+.Silver2 {
+    width: 4vw; height: 4vw;
+    margin-top: 1%; margin-bottom: 1%;
+    position: absolute;
+    top: 17%; left: 22%;
+}
+.Bronze3 {
+    width: 4vw; height: 4vw;
+    margin-top: 1%; margin-bottom: 1%;
+    position: absolute;
+    top: 29%; left: 32%; 
+}
+.TheOther4 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 40%; left: 37%;
+}
+.TheOther5 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 51%; left: 37%;
+}
+.TheOther6 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 63%; left: 33%;
+}
+.TheOther7 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 74%; left: 24%;
+}
+.TheOther8 {
+    width: 3.5vw; height: 3.5vw;
+    margin-top: 2%; margin-bottom: 2%;
+    position: absolute;
+    top: 85%; left: 7%;
+}
+
+/* 우측 영역 (게임 메인 요소) */
+div.right {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    margin-top: 2vw;
+    box-sizing: border-box;
+    text-align: center;
+}
+.GameName {
+    font-family: 'ONE-Mobile-POP', 'ONE-Mobile-POP' !important;
+    color: white;
+    font-size: 5vw;
+    margin-top: 15%;
+    margin-bottom: 5%;
+}
+#nickname {
+    font-family: 'KCC-Hanbit', 'KCC-Hanbit' !important;
+    font-size: 30px;
+    text-align: center;
+    width: 30vw;
+    height: 7vh;
+    margin: 0 auto 5%; /* 가운데 정렬 */
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+button {
+    font-family: 'KCC-Hanbit', 'KCC-Hanbit' !important;
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    width: 20vw;
+    height: 7vh;
+    margin: 1% auto; /* 가운데 정렬 */
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: rgba(105, 110, 118, 0.2);
+    cursor: pointer;
+}
+button:hover {
+    background-color: rgba(105, 109, 118, 0.8);
+    transition: 0.1s;
+}
+/* 모달 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 어둡게 */
+    overflow: hidden; /* 배경 스크롤 비활성화 */
+}
+.modal-content {
+    background-color: #fefefe;
+    border-radius: 15px;
+    margin: 1% auto;
+    width: 50%;
+    font-size: 2vw;
+    color: black;
+    max-height: 95vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.modal-header {
+    background-color: #293047;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    height: 5vh;
+}
+.modal-body {
+    padding: 5%;
+    overflow-y: auto; /* 스크롤 활성화 */
+    flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
+}
+.aboutClose {
+    font-size: 1.25vw;
+    margin-top: 1.5vw; margin-bottom: 3vw;
+    margin-left: 15vh;
+}
+.guideContent {
+    font-size: 1.26vw;
+    background-color: #f3f3f3;
+    padding: 2%;
+}
+/* 모달_스크롤바 스타일 */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+}
+.closeButton {
+    float: right;
+    color: black;
+    font-size: 100px;
+    background-color: #ffffff;
+
+}
+/* 곰돌이 이미지 스타일 */
+.BearIMG {
+    position: absolute;
+    right: -0.01%;
+}
