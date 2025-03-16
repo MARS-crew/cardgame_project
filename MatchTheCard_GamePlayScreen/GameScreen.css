@@ -7,8 +7,7 @@
 
 body {
     font-family: 'KCC-Hanbit';
-    background: url('background.png') no-repeat center center fixed;
-    background-image: url("../MatchTheCard_GameMainScreen/MainScreen_Photo/background.png");
+    background: url(./asset/images/GameScreen_BackGround.png);
     background-size: cover;
     color: white;
     text-align: center;
@@ -149,12 +148,12 @@ body {
     background-color: #323d58;
     border-radius: 10px;
 }
-
+  
 .item-text {
     font-size: 3vh;
     margin-bottom: 20px;
 }
-
+  
 .items {
     width: 10vh;
     display: grid;
@@ -162,7 +161,7 @@ body {
     grid-template-rows: repeat(4, 1fr);
     gap: 2vh;
 }
-
+  
 .item {
     display: flex;
     background-color: #f0f0f0;
@@ -227,12 +226,12 @@ body {
         background-color: #323d58;
         border-radius: 10px;
     }
-
+      
     .item-text {
         font-size: 6vw;
         margin-bottom: 2vw;
     }
-
+      
     .items {
         width: auto;
         height: 16vw;
@@ -241,7 +240,7 @@ body {
         grid-template-rows: 1fr;
         gap: 2vw;
     }
-
+      
     .item {
         display: flex;
         background-color: #f0f0f0;

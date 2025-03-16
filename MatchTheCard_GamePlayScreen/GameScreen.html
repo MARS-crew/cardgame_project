@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>게임 화면</title>
-    <link rel="stylesheet" href="GameScreen.css">
-    <link rel="stylesheet" href="Timer.css">
-    <link rel="stylesheet" href="GameWrapper.css">
+    <link rel="stylesheet" href="./GameScreen.css">
+    <link rel="stylesheet" href="./Timer.css">
+    <link rel="stylesheet" href="./GameWrapper.css">
+    <link rel="stylesheet" href="./loading.css">
 </head>
 <body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p>로딩 중...</p>
+    </div>
+
     <div class="round" id="roundBox">
         <span id="roundText">테스트</span>
     </div>
@@ -19,14 +25,13 @@
         <div class="modal-content"></div>
     </div>
 
-
     <div class="container">
-
         <!-- 상단 컨테이너 -->
         <div class="top-container">
             <button class="back-button" onclick="history.back()">◀ 메인 화면</button>
             <div class="score-board">
-                <span>랭킹 - 점수</span> <span id="score">9999</span>
+                랭킹 <span id="rank-text">???</span>위
+                점수 <span id="score-text">0</span>점
             </div>
             <!-- 원형 프로그레시브 타이머 -->
             <div class="timer-container">
@@ -46,10 +51,9 @@
                 <div class="item-text">아이템</div>
                 <div class="items" id="items"></div>
             </div>
-            <button onclick="autoMatch()">cheat</button>
         </div>
     </div>
 
-    <script src="GameScreen.js"></script>
+    <script src="./GameScreen.js"></script>
 </body>
 </html>

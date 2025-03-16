@@ -2,8 +2,11 @@
 let isGameStarted = false; // 게임 시작 여부 (초기값: false)
 let currentRound = 0; // 현재 진행 중인 라운드 번호
 let isRoundCleared = false; // 현재 라운드가 클리어되었는지 여부 (초기값: false)
-let score = 0; // 현재 점수 (초기값: 0)
-let sec = 0; // 타이머에 남은 시간 (초 단위)
+let myScore = 0; // 현재 점수 (초기값: 0)
+let timerTime = 0;
+
+const scoreText = document.getElementById("score-text"); // 점수를 표시할 DOM 요소
+const rankText = document.getElementById("rank-text"); // 순위를 표시할 DOM 요소
 
 // 각 라운드별 설정
 let roundTime = [20, 30, 40, 50, 60]; // 각 라운드의 제한 시간 (초 단위)
@@ -38,23 +41,52 @@ const modal = document.querySelector('.modal'); // 모달 요소
 const overlay = document.querySelector('.modal-overlay'); // 모달 배경 오버레이
 const modalContent = modal.querySelector('.modal-content'); // 모달 내 실제 내용 표시 요소
 
+let rankings = []; // 랭킹 데이터를 저장할 변수
+let rank = 0; // 내 순위를 저장할 변수
+let MyNickName = ''; // 플레이어 닉네임을 저장할 변수
+
+const rankApiUrl = "http://125.188.5.149:13131/api/rank"; // 랭킹 조회 API URL
+const resultApiUrl = "http://125.188.5.149:13131/api/result"; // 결과 저장 API URL
+
 /**
  * 게임을 시작하는 함수
  */
 function gameStart() {
-    document.getElementById("score").textContent = score;
-    currentRound = 0;
+    if (!true) {
+        alert("오류가 발생했습니다. 이전 페이지로 돌아갑니다.");
+        history.back()
+        return;
+    }
+    MyNickName = localStorage.getItem("playerNickname") || "guest"; // 닉네임 가져오기 (없으면 guest)
     createItemSlots(5);
-    gameSet(currentRound);
+    roundSet(currentRound);
     isGameStarted = true;
-    startTimer(roundTime[currentRound]);
+}
+
+// 게임 클리어 시 호출
+function gameClear() {
+    isGameStarted = false;
+    saveRanking(MyNickName, myScore);
+    setTimeout(() => {
+        window.location.href="../MatchTheCard_GameClearScreen/ClearScreen.html"
+    }, 3000);
+}
+
+// 게임 오버 시 호출
+function gameOver() {
+    isGameStarted = false;
+    showRound();
+    saveRanking(MyNickName, myScore);
+    setTimeout(() => {
+        window.location.href="../MatchTheCard_GameOverScreen/gameoverScreen.html"
+    }, 3000);
 }
 
 /**
  * 주어진 라운드에 맞춰 게임을 세팅하는 함수
  * @param {*} round - 현재 라운드 번호
  */
-function gameSet(round) {
+function roundSet(round) {
     CARD_PER_COLUMN = roundColumn[round];
     CARD_PER_ROW = roundRow[round];
 
@@ -80,6 +112,8 @@ function gameSet(round) {
     flipContainer.style.gridTemplateRows = `repeat(${CARD_PER_ROW}, 1fr)`;
     flipContainer.style.gridTemplateColumns = `repeat(${CARD_PER_COLUMN}, 1fr)`;
     flipContainer.style.gap = '1rem';
+
+    startTimer(roundTime[round]);
 }
 
 /**
@@ -102,7 +136,7 @@ function createCard(value) {
     back.classList.add('back');
 
     const cardImage = document.createElement('img');
-    cardImage.src = `../asset/cardImages/${value}.png`; // 이미지 경로를 설정
+    cardImage.src = `asset/cardImages/${value}.png`; // 이미지 경로를 설정
     back.appendChild(cardImage); // 이미지 추가
 
     // 앞면과 뒷면을 카드에 추가
@@ -134,55 +168,56 @@ const calculateRotation = (start, end) => {
 
 /**
  * 카드 회전 및 드래그 마우스 이벤트를 처리하는 함수
- * @param {*} selectedCard - 회전을 적용할 선택된 카드
+ * @param {*} selectedcard - 회전을 적용할 선택된 카드
  */
-function rotateCard(selectedCard) {
-    selectedCard.addEventListener('mousedown', (e) => {
+function rotateCard(selectedcard) {
+    selectedcard.addEventListener('mousedown', (e) => {
         startPoint = {X: e.pageX, Y: e.pageY};
     });
 
-    selectedCard.addEventListener('mouseup', (e) => {
+    selectedcard.addEventListener('mouseup', (e) => {
         const endPoint = {X: e.pageX, Y: e.pageY};
         const rotation = calculateRotation(startPoint, endPoint);
 
-        if (isFlipping2 || selectedCard.classList.contains('flipped')) {
+        if (isFlipping2 || selectedcard.classList.contains('flipped')) {
             return;
         }
 
-        selectedCard.currentRotate.X += rotation.X;
-        selectedCard.currentRotate.Y += rotation.Y;
+        selectedcard.currentRotate.X += rotation.X;
+        selectedcard.currentRotate.Y += rotation.Y;
         
-        flipCard(selectedCard);
+        flipCard(selectedcard);
     });
 }
 
 /**
  * 카드가 뒤집힌 후 같은 카드인지 확인하고 처리하는 함수
- * @param {card} selectedCard - 선택된 카드 객체
+ * @param {card} selectedcard - 선택된 카드 객체
  */
-function flipCard(selectedCard) {
-    if (!isGameStarted || isFlipping2 || selectedCard.classList.contains('flipped')) {
+function flipCard(selectedcard) {
+    if (!isGameStarted || isFlipping2 || selectedcard.classList.contains('flipped')) {
         return;
     }
     
-    selectedCard.classList.add('flipped');
+    selectedcard.classList.add('flipped');
     isFlipping1 = true;
-    flippedCards.push(selectedCard);
-    selectedCard.style.transform = `rotateX(${selectedCard.currentRotate.X}deg) rotateY(${selectedCard.currentRotate.Y}deg)`;
+    flippedCards.push(selectedcard);
+    selectedcard.style.transform = `rotateX(${selectedcard.currentRotate.X}deg) rotateY(${selectedcard.currentRotate.Y}deg)`;
 
     if (flippedCards.length === 2) {
         isFlipping2 = true;
 
         let [firstCard, secondCard] = flippedCards;
         if (firstCard.dataset.value === secondCard.dataset.value) {
-            score += 55;
-            document.getElementById("score").textContent = score;
+            myScore += 55;
+            updateUserRank(myScore);
+            scoreText.textContent = myScore;
 
             setTimeout(() => { 
                 // 맞은 카드에 효과 추가
                 firstCard.classList.add('matched');
                 secondCard.classList.add('matched');
-                const correctSound = new Audio('../asset/DeviceConnect.wav'); // 맞았을 때 효과음
+                const correctSound = new Audio('./asset/sounds/DeviceConnect.wav'); // 맞았을 때 효과음
                 correctSound.play(); // 맞았을 때 효과음 재생
             }, 500);
 
@@ -195,7 +230,7 @@ function flipCard(selectedCard) {
                 // 틀린 카드에 효과 추가
                 firstCard.classList.add('mismatch');
                 secondCard.classList.add('mismatch');
-                const wrongSound = new Audio('../asset/DeviceConnectionError.wav'); // 틀렸을 때 효과음
+                const wrongSound = new Audio('./asset/sounds/DeviceConnectionError.wav'); // 틀렸을 때 효과음
                 wrongSound.play(); // 틀렸을 때 효과음 재생
             }, 500);
 
@@ -214,7 +249,6 @@ function flipCard(selectedCard) {
     }
 }
 
-
 /**
  * 모든 카드가 뒤집혀졌는지 확인하고
  * 
@@ -226,7 +260,7 @@ function checkRoundClear() {
         if (timerId) cancelAnimationFrame(timerId); // 기존 타이머 정리
         showRound();
         nextRound();
-        const clearSound = new Audio('../asset/alarm-3.mp3'); // 맞았을 때 효과음
+        const clearSound = new Audio('./asset/sounds/alarm-3.mp3'); // 맞았을 때 효과음
         clearSound.volume = 0.1;  // 0.5는 50% 볼륨
         clearSound.play(); // 클리어 효과음 재생
     }
@@ -235,9 +269,9 @@ function checkRoundClear() {
 /**
  * 타이머를 시작하고, 시간이 지나면 게임 종료 처리를 하는 함수
  */
-function startTimer(ssec) {
-    sec = ssec;
-    timerDisplay.textContent = sec + "초";
+function startTimer(sec) {
+    timerTime = sec;
+    timerDisplay.textContent = timerTime + "초";
     let startTime = null;
     let num = 360;
 
@@ -245,10 +279,10 @@ function startTimer(ssec) {
         if (!startTime) startTime = timestamp;
         const elapsedTime = (timestamp - startTime) / 1000;
 
-        const remainingTime = Math.max(sec - elapsedTime, 0);
+        const remainingTime = Math.max(timerTime - elapsedTime, 0);
         timerDisplay.textContent = Math.ceil(remainingTime) + "초";
 
-        const angle = (remainingTime / sec) * 360;
+        const angle = (remainingTime / timerTime) * 360;
         timerContainer.style.setProperty("--timerA", angle + "deg");
 
         if (remainingTime < 10) {
@@ -260,9 +294,8 @@ function startTimer(ssec) {
         if (remainingTime > 0) {
             timerId = requestAnimationFrame(updateTimer);
         } else {
-            window.location.href="../../MatchTheCard_GameOverScreen/gameoverScreen.html"
             timerDisplay.textContent = "끝";
-            isGameStarted = false;
+            gameOver();
         }
     }
 
@@ -277,11 +310,16 @@ function showRound() {
     const text = document.getElementById("roundText");
 
     if (!roundBox || !text) return;
+    if (!isGameStarted) {
+        roundBox.style.animation = "showRoundBox 3s linear";
+        text.innerText = `게임 오버`;
+        text.style.animation = "showRound 3s linear";
+        return;
+    }
     if (currentRound == maxRound) {
         roundBox.style.animation = "showRoundBox 3s linear";
         text.innerText = `클리어`;
         text.style.animation = "showRound 3s linear";
-        
         return;
     }
 
@@ -325,12 +363,12 @@ function resetSlotData(slot) {
  * 
  * 특정 슬롯을 생성하고, 클릭 시 특정 동작을 수행하는 이벤트 리스너를 추가합니다.
  * 
- * @param {number} slotCount 생성할 슬롯 개수
+ * @param {number} slotcount 생성할 슬롯 개수
  */
-function createSpecialItemSlots(slotCount) {
+function createSpecialItemSlots(slotcount) {
     const slot = document.createElement('div');
     slot.classList.add('specialItem');
-    slot.dataset.slotId = slotCount-1;
+    slot.dataset.slotId = slotcount-1;
     slot.dataset.item = ''; // 초기 아이템 값 설정
         
     // 슬롯 클릭 시 해당 아이템 확인
@@ -350,10 +388,10 @@ function createSpecialItemSlots(slotCount) {
  * 주어진 수만큼 아이템 슬롯을 생성하고,
  * 
  * 슬롯 클릭 시 해당 아이템에 따라 동작을 수행하는 함수
- * @param {number} slotCount 아이템 슬롯 개수
+ * @param {number} slotcount 아이템 슬롯 개수
  */
-function createItemSlots(slotCount) {
-    for (let i = 0; i < slotCount - 1; i++) {
+function createItemSlots(slotcount) {
+    for (let i = 0; i < slotcount - 1; i++) {
         const slot = document.createElement('div');
         slot.classList.add('item');
         slot.dataset.slotId = i;
@@ -365,7 +403,7 @@ function createItemSlots(slotCount) {
             console.log('클릭된 아이템:', item);
             switch (item) {
                 case '시간 추가':
-                    sec += 10;
+                    timerTime += 10;
                     resetSlotData(slot);
                     break;
                 case '랜덤 매칭':
@@ -383,7 +421,7 @@ function createItemSlots(slotCount) {
         itemContainer.appendChild(slot);
     }
 
-    createSpecialItemSlots(slotCount);
+    createSpecialItemSlots(slotcount);
 }
 
 /**
@@ -403,7 +441,7 @@ function shiftItemsUp() {
             // 빈 슬롯을 찾은 후, 그 이후 아이템을 위로 이동
             slots[firstEmptySlotIndex].dataset.item = slot.dataset.item;
             const itemImage = document.createElement('img');
-            itemImage.src = `../asset/cardImages/${slot.dataset.item}.png`;
+            itemImage.src = `./asset/cardImages/${slot.dataset.item}.png`;
             slots[firstEmptySlotIndex].appendChild(itemImage)
             slot.dataset.item = '';
             slot.innerText = '';
@@ -415,21 +453,21 @@ function shiftItemsUp() {
 /**
  * 아이템을 빈 슬롯 또는 특수 슬롯에 추가하는 함수
  * 
- * @param {number} itemValue 추가할 아이템의 인덱스 값
+ * @param {number} itemvalue 추가할 아이템의 인덱스 값
  */
-function addItem(itemValue) {
+function addItem(itemvalue) {
     const slots = document.querySelectorAll('.item');
     const specialSlots = document.querySelectorAll('.specialItem');
     const emptySlots = Array.from(slots).filter(slot => !slot.dataset.item);
     const emptySpecialSlots = Array.from(specialSlots).filter(specialSlots => !specialSlots.dataset.item);
     const itemImage = document.createElement('img');
     const modalItemImage = document.createElement('img');
-    itemImage.src = `../asset/cardImages/${itemTypes[itemValue]}.png`;
-    modalItemImage.src = `../asset/cardImages/${itemTypes[itemValue]}.png`;
+    itemImage.src = `./asset/cardImages/${itemTypes[itemvalue]}.png`;
+    modalItemImage.src = `./asset/cardImages/${itemTypes[itemvalue]}.png`;
 
-    if (itemValue == 2) {
+    if (itemvalue == 2) {
         if (emptySpecialSlots.length > 0) {
-            emptySpecialSlots[0].dataset.item = itemTypes[itemValue];
+            emptySpecialSlots[0].dataset.item = itemTypes[itemvalue];
             emptySpecialSlots[0].appendChild(itemImage);
             modalContent.appendChild(modalItemImage);
             //emptySpecialSlots[0].innerText = itemTypes[itemValue];
@@ -438,7 +476,7 @@ function addItem(itemValue) {
         }
     } else {
         if (emptySlots.length > 0) {
-            emptySlots[0].dataset.item = itemTypes[itemValue];
+            emptySlots[0].dataset.item = itemTypes[itemvalue];
             emptySlots[0].appendChild(itemImage);
             modalContent.appendChild(modalItemImage);
             //emptySlots[0].innerText = itemTypes[itemValue];
@@ -478,8 +516,9 @@ function addRoundItem() {
  * 현재 점수를 증가시키고, 새로운 라운드를 설정
  */
 function nextRound() {
-    score += 550;
-    document.getElementById("score").textContent = score;
+    myScore += 550;
+    updateUserRank(myScore);
+    scoreText.textContent = myScore;
     currentRound++;
     
     if (currentRound < roundColumn.length) {
@@ -488,14 +527,10 @@ function nextRound() {
         }, 1000);
         
         setTimeout(() => {
-            gameSet(currentRound);
-            startTimer(roundTime[currentRound]);
+            roundSet(currentRound);
         }, 3000);
     } else {
-        setTimeout(() => {
-            window.location.href="../../MatchTheCard_GameClearScreen/ClearScreen.html"
-            isGameStarted = false;
-        }, 3000);
+        gameClear();
     }
 }
 
@@ -590,4 +625,64 @@ function showRoundItem() {
     }, 2000);
 }
 
-gameStart();
+// 게임 시작 시 호출 (초기 GET 요청)
+async function initializeGame() {
+    try {
+        const response = await fetch(rankApiUrl);
+        rankings = (await response.json()).rankings;
+        //console.log("초기 랭킹 정보:", rankings);
+        rankText.textContent = rankings.length; // 초기 순위 설정
+    } catch (error) {
+        console.error("랭킹 데이터를 가져오는 중 오류 발생:", error);
+    }
+}
+
+// 원하는 시점에 호출하여 내 점수와 비교 후 순위 계산
+function updateUserRank(currentscore) {
+    for (let i = 0; i < rankings.length; i++) {
+        if (currentscore >= rankings[i].score) {
+            rank = rankings[i].rank;
+            rankText.textContent = rank;
+            break;
+        }
+    }
+    console.log(`당신의 순위는: ${rank}위`);
+}
+
+async function saveRanking(nickname, score) {
+    const params = new URLSearchParams();
+    params.append("nickname", nickname);
+    params.append("score", score);
+  
+    try {
+        const response = await fetch(resultApiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: params.toString(),
+        });
+    
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // 응답을 JSON으로 처리
+        const result = await response.json();
+        
+        // 서버 응답 로그 출력
+        console.log(result.message);
+    
+        return result; // 응답 객체 반환
+    } catch (error) {
+        console.error("랭킹 저장 실패:", error);
+        throw error; // 에러를 호출자에게 다시 던져준다.
+    }
+}
+
+initializeGame();
+
+window.onload = function() {
+    document.getElementById('loading-screen').style.display = 'none';
+    gameStart();
+}

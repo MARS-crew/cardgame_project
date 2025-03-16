@@ -1,6 +1,6 @@
 /*메인화면 이동*/
 document.querySelector('button').addEventListener('click', function goMainScreen() {
-    window.location.href = '../../MatchTheCard_GameMainScreen/MainScreen.html'; 
+    window.location.href = '../MatchTheCard_GameMainScreen/MainScreen.html'; 
 });
 
 document.addEventListener("DOMContentLoaded", function() {

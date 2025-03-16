@@ -1,7 +1,8 @@
 function startGame() {
     const nickname = document.getElementById('nickname').value;
     if (nickname) {
-        window.location.href="../../MatchTheCard_GamePlayScreen/GameScreen.html"
+        localStorage.setItem("playerNickname", nickname);
+        window.location.href="../MatchTheCard_GamePlayScreen/GameScreen.html"
     } else {
         alert('닉네임을 입력해 주세요.');
     }
