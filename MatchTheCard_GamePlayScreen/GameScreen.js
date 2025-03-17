@@ -45,8 +45,8 @@ let rankings = []; // 랭킹 데이터를 저장할 변수
 let rank = 0; // 내 순위를 저장할 변수
 let MyNickName = ''; // 플레이어 닉네임을 저장할 변수
 
-const rankApiUrl = "http://125.188.5.149:13131/api/rank"; // 랭킹 조회 API URL
-const resultApiUrl = "http://125.188.5.149:13131/api/result"; // 결과 저장 API URL
+const rankApiUrl = "http://125.188.5.149:13131/api/rank.php"; // 랭킹 조회 API URL
+const resultApiUrl = "http://125.188.5.149:13131/api/result.php"; // 결과 저장 API URL
 
 /**
  * 게임을 시작하는 함수
