@@ -70,6 +70,11 @@ function gameClear() {
     setTimeout(() => {
         window.location.href="../MatchTheCard_GameClearScreen/ClearScreen.html"
     }, 3000);
+
+    localStorage.setItem("playerNickname", MyNickName);
+    localStorage.setItem("playerRank", rank);
+    localStorage.setItem("playerScore", myScore);
+    
 }
 
 // 게임 오버 시 호출
@@ -80,6 +85,10 @@ function gameOver() {
     setTimeout(() => {
         window.location.href="../MatchTheCard_GameOverScreen/gameoverScreen.html"
     }, 3000);
+
+    localStorage.setItem("playerNickname", MyNickName);
+    localStorage.setItem("playerRank", rank);
+    localStorage.setItem("playerScore", myScore);
 }
 
 /**
@@ -653,7 +662,7 @@ async function saveRanking(nickname, score) {
     const params = new URLSearchParams();
     params.append("nickname", nickname);
     params.append("score", score);
-  
+
     try {
         const response = await fetch(resultApiUrl, {
             method: "POST",

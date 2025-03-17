@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     //  현재 플레이어의 닉네임 가져오기
     let myNickname = localStorage.getItem("playerNickname") || new URLSearchParams(window.location.search).get("nickname");
 
+    Rank = localStorage.getItem("playerRank")
+    Score = localStorage.getItem("playerScore")
+
     console.log("현재 플레이어 닉네임:", myNickname);
     
 
@@ -64,14 +67,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 setInterval(updateRanking, 4500);
                 
                     //오른쪽 내 점수 & 순위 업데이트
-                    if (myRank !== -1) {
                         document.querySelector(".name p").textContent = myNickname;
-                        document.querySelector(".score p").innerHTML = 
-                            `${myRank}위 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${myScore}`;
-                    } else {
-                        document.querySelector(".name p").textContent = "데이터 없음";
-                        document.querySelector(".score p").textContent = "순위 없음";
-                    }
+                        document.querySelector(".score p").innerHTML =
+                            `${Rank}위 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${Score}점`;
                 } else {
                     console.warn("서버에서 랭킹 데이터가 비어 있음");
                 }

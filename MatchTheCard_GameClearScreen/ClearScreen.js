@@ -19,47 +19,26 @@ stars.forEach((star, index) => {
     }, index * 200);  
 });
 
+MyNickName = localStorage.getItem("playerNickname")
+MyScore = localStorage.getItem("playerScore")
+MyRank = localStorage.getItem("playerRank")
+
+console.log(MyScore)
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log("화면 로드 완료");
+
+    MyNickName = localStorage.getItem("playerNickname") 
+    rank = localStorage.getItem("rank")
 
     //현재 플레이어의 닉네임 가져오기
     let myNickname = localStorage.getItem("playerNickname") || new URLSearchParams(window.location.search).get("nickname");
 
     console.log("현재 플레이어 닉네임:", myNickname);
 
-    //서버에서 랭킹 가져와서 화면에 표시하는 함수
-    function getMyRanking() {
-        fetch("http://125.188.5.149:13131/api/rank")
-            .then(response => response.json()) 
-            .then(data => {
-                console.log("랭킹 데이터 받아옴:", data);
-
-                if (data.length > 0) {
-                    let myRank = -1;
-                    let myScore = 0;
-
-                    //내 순위 찾기
-                    data.forEach((player, index) => {
-                        if (player.nickname === myNickname) {
-                            myRank = index + 1; 
-                            myScore = player.score;
-                        }
-                    });
-
-                    // 내 순위가 있다면 화면 업데이트
-                    if (myRank !== -1) {
-                        document.querySelector(".name p").textContent = myNickname;
-                        document.querySelector(".score p").innerHTML = 
-                            `${myRank}위 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${myScore}`;
-                    } else {
-                        console.warn(` ${myNickname}의 랭킹을 찾을 수 없음`);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("랭킹 조회 실패:", error);
-            });
-    }
+    document.querySelector(".name p").textContent = myNickname;
+    document.querySelector(".score p").innerHTML = 
+    `${MyRank}위 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${MyScore}점`;
 
     //랭킹 가져오기 (페이지 로드 시 실행)
     getMyRanking();
