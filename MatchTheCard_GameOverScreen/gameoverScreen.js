@@ -37,11 +37,16 @@ document.addEventListener("DOMContentLoaded", function() {
                         if (rankIndex < rankings.length) {
                             let player = rankings[rankIndex];
                             element.textContent = `${player.nickname}  |  ${player.score}점`;
-                            if (i == 0) {
+                            if (currentIndex == 0) {
                                 document.querySelector('.Gold1').src = 'Gold1.png';
+                                document.querySelector('.Silver2').src = 'Silver2.png';
+                                document.querySelector('.Bronze3').src = 'Bronze3.png';
                             } else {
                                 document.querySelector('.Gold1').src = 'TheOther.png';
+                                document.querySelector('.Silver2').src = 'TheOther.png';
+                                document.querySelector('.Bronze3').src = 'TheOther.png';
                             }
+
                         } 
                         else {
                             element.textContent = "";
