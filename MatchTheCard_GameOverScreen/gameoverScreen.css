@@ -55,10 +55,10 @@ div.left {
 /* 랭크 리스트 순위권 위치 */
 .rank {
     position: absolute;
-    width: 17vw; height: 3vw;
+    width: 22vw; height: 3vw;
     border-radius: 0.5vw;
     font-size: 20px;
-    text-align: center;
+    text-align: left;
     background-color: #2b334b;
     line-height: 3vw;
 }

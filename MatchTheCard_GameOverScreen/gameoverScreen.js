@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let rankIndex = currentIndex * 8 + i;
                         if (rankIndex < rankings.length) {
                             let player = rankings[rankIndex];
-                            element.textContent = `${player.nickname}  |  ${player.score}점`;
+                            element.innerHTML = `${player.rank}위 &nbsp;| &nbsp;${player.nickname} &nbsp; ${player.score}점`;
                             if (currentIndex == 0) {
                                 document.querySelector('.Gold1').src = 'Gold1.png';
                                 document.querySelector('.Silver2').src = 'Silver2.png';
