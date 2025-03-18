@@ -40,13 +40,13 @@ document.addEventListener("DOMContentLoaded", function() {
                             let player = rankings[rankIndex];
                             element.innerHTML = `&nbsp;${player.rank}위 &nbsp;| &nbsp;${player.nickname} &nbsp; ${player.score}점`;
                             if (currentIndex == 0) {
-                                document.querySelector('.Gold1').src = './MainScreen_Photo/Gold1.png';
-                                document.querySelector('.Silver2').src = './MainScreen_Photo/Silver2.png';
-                                document.querySelector('.Bronze3').src = './MainScreen_Photo/Bronze3.png';
+                                document.querySelector('.Gold1').src = '/MatchTheCard_GameMainScreen/MainScreen_Photo/Gold1.png';
+                                document.querySelector('.Silver2').src = '/MatchTheCard_GameMainScreen/MainScreen_Photo/Silver2.png';
+                                document.querySelector('.Bronze3').src = '/MatchTheCard_GameMainScreen/MainScreen_Photo/Bronze3.png';
                             } else {
-                                document.querySelector('.Gold1').src = './MainScreen_Photo/TheOther.png';
-                                document.querySelector('.Silver2').src = './MainScreen_Photo/TheOther.png';
-                                document.querySelector('.Bronze3').src = './MainScreen_Photo/TheOther.png';
+                                document.querySelector('.Gold1').src = '/MatchTheCard_GameMainScreen/MainScreen_Photo/TheOther.png';
+                                document.querySelector('.Silver2').src = '/MatchTheCard_GameMainScreen/MainScreen_Photo/TheOther.png';
+                                document.querySelector('.Bronze3').src = '/MatchTheCard_GameMainScreen/MainScreen_Photo/TheOther.png';
                             }
                         } else {
                             element.textContent = "";
