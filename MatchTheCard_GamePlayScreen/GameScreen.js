@@ -663,29 +663,25 @@ async function saveRanking(nickname, score) {
     params.append("nickname", nickname);
     params.append("score", score);
 
-    try {
-        const response = await fetch(resultApiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: params.toString(),
-        });
-    
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    for (let i = 0; i < rankings.length; i++) {
+        if (rankings[i].nickname == nickname && rankings[i].score < score) {
+            try {
+                const response = await fetch(resultApiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: params.toString(),
+                });
+            
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error("랭킹 저장 실패:", error);
+                throw error; // 에러를 호출자에게 다시 던져준다.
+            }
         }
-
-        // 응답을 JSON으로 처리
-        const result = await response.json();
-        
-        // 서버 응답 로그 출력
-        console.log(result.message);
-    
-        return result; // 응답 객체 반환
-    } catch (error) {
-        console.error("랭킹 저장 실패:", error);
-        throw error; // 에러를 호출자에게 다시 던져준다.
     }
 }
 
